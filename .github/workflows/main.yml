@@ -39,10 +39,10 @@ jobs:
                   --header "authorization: ${{ secrets.BC_API_KEY }}" \
                   --data "$data")
             id=$(echo $id | jq -r .policy)
-            git mv ${changed_file} "$id.yml"
+            git mv ${changed_file} "$id.json"
             git config user.email "demo@panw.com"
             git config user.name "${GITHUB_ACTOR}"
-            git commit -m "policy renamed to $id.yml"
+            git commit -m "policy renamed to $id.json"
             git push
           done
       
