@@ -33,7 +33,7 @@ jobs:
           for changed_file in ${{ steps.files_modified.outputs.added }}; do
             data=$(yq e -o=json ${changed_file} | jq '.')
             id=$(curl --request POST \
-                  --url https://www.bridgecrew.cloud/api/v1/policies \
+                  --url https://api.prismacloud.io/policy \
                   --header 'Accept: application/json' \
                   --header 'Content-Type: application/json' \
                   --header "authorization: ${{ secrets.BC_API_KEY }}" \
