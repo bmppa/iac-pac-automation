@@ -30,15 +30,24 @@ jobs:
       - name: Create Policy
         if: ${{ steps.files_modified.outputs.added }}
         run: |
+          
+          auth=$(curl --request POST \
+            --url https://api.prismacloud.io/login \
+            --header 'Content-Type: application/json' \
+            --data '{
+            "username": ${{ secrets.pcs_user }},
+            "password": ${{ secrets.pcs_pass }}
+          }' | jq -r .token)
+          
           for changed_file in ${{ steps.files_modified.outputs.added }}; do
-            data=$(yq e -o=json ${changed_file} | jq '.')
+            data=${changed_file}
             id=$(curl --request POST \
                   --url https://api.prismacloud.io/policy \
                   --header 'Accept: application/json' \
                   --header 'Content-Type: application/json' \
-                  --header "authorization: ${{ secrets.BC_API_KEY }}" \
-                  --data "$data")
-            id=$(echo $id | jq -r .policy)
+                  --header "authorization: $auth" \
+                  --data "$data" | jq -r .policyId)
+            id=$(echo $id | jq -r .policyId)
             git mv ${changed_file} "$id.json"
             git config user.email "demo@panw.com"
             git config user.name "${GITHUB_ACTOR}"
