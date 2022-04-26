@@ -31,13 +31,10 @@ jobs:
         if: ${{ steps.files_modified.outputs.added }}
         run: |
           
-          auth=$(curl --request POST \
+          token=$(curl --request POST \
             --url https://api.prismacloud.io/login \
             --header 'Content-Type: application/json' \
-            --data '{
-            "username": ${{ secrets.pcs_user }},
-            "password": ${{ secrets.pcs_pass }}
-          }' | jq -r .token)
+            --data '{"username": "${{ secrets.pcs_user }}", "password": "${{ secrets.pcs_pass }}"}' | jq -r .token)
           
           for changed_file in ${{ steps.files_modified.outputs.added }}; do
             data=${changed_file}
@@ -45,7 +42,7 @@ jobs:
                   --url https://api.prismacloud.io/policy \
                   --header 'Accept: application/json' \
                   --header 'Content-Type: application/json' \
-                  --header "authorization: $auth" \
+                  --header "authorization: $token" \
                   --data "$data" | jq -r .policyId)
             id=$(echo $id | jq -r .policyId)
             git mv ${changed_file} "$id.json"
