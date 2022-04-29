@@ -35,7 +35,7 @@ jobs:
         run: |
         
           AUTH_TOKEN=$(curl -skH "Content-Type: application/json" \
-              -d '{"username":"${{ secrets.SUSER }}", "password":"${{ secrets.SPASS }}"}' \
+              -d '{"username":"${{ secrets.PCS_USER }}", "password":"${{ secrets.PCS_PASS }}"}' \
               https://api.prismacloud.io/login | jq -r .token)
           
           echo "Policy: ${changed_file}"
