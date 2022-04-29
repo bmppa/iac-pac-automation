@@ -34,19 +34,24 @@ jobs:
       - name: Create Policy
         if: ${{ steps.files_modified.outputs.added }}
         run: |
+        
+          AUTH_TOKEN=$(curl -skH "Content-Type: application/json" \
+              -d '{"username":"${{ secrets.SUSER }}", "password":"${{ secrets.SPASS }}"}' \
+              https://api.prismacloud.io/login | jq -r .token)
+          
+          echo "Policy: ${changed_file}"
+          
           for changed_file in ${{ steps.files_modified.outputs.added }}; do
-            data=$(yq e -o=json ${changed_file} | jq '.')
+            data=${changed_file}
             id=$(curl --request POST \
-                  --url https://www.bridgecrew.cloud/api/v1/policies \
-                  --header 'Accept: application/json' \
+                  --url https://api.prismacloud.io/policy \
                   --header 'Content-Type: application/json' \
-                  --header "authorization: ${{ secrets.BC_API_KEY }}" \
-                  --data "$data")
-            id=$(echo $id | jq -r .policy)
-            git mv ${changed_file} "$id.yml"
+                  --header "Authorization: Bearer $AUTH_TOKEN" \
+                  --data "$data" | jq .policyId)
+            git mv ${changed_file} "$id.json"
             git config user.email "demo@panw.com"
             git config user.name "${GITHUB_ACTOR}"
-            git commit -m "policy renamed to $id.yml"
+            git commit -m "policy renamed to $id.json"
             git push
           done
       
