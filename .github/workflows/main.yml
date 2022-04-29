@@ -45,7 +45,7 @@ jobs:
                   --url https://api.prismacloud.io/policy \
                   --header 'Content-Type: application/json' \
                   --header "Authorization: Bearer $AUTH_TOKEN" \
-                  --data "$data" | jq .policyId)
+                  --data "$data" | jq -r .policyId)
             git mv ${changed_file} "$id.json"
             git config user.email "demo@panw.com"
             git config user.name "${GITHUB_ACTOR}"
