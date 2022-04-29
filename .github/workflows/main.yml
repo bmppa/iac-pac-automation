@@ -66,13 +66,17 @@ jobs:
                            --header 'Accept: application/json' \
                            --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}")
             total_policies=$(echo $all_policies | jq '. | length')
+            echo "Total Policies: #total_policies"
             deleted_policy=$(echo ${changed_file} | cut -d '.' -f 1)
+            echo "Deleted policy: $deleted_policy"
             
             for ((t = 0 ; t < $total_policies ; t++)); do
                 policy=$(echo $all_policies | jq -r .[$t].policyId)
+                echo "Policy: $policy"
                 if [[ "$deleted_policy" == "$policy" ]];
                     then
                         data=$(cat ${changed_file})
+                        echo "Data: $data"
                         curl --request PUT \
                             --url https://api.prismacloud.io/policy/$policy \
                             --header 'Accept: application/json' \
