@@ -39,7 +39,7 @@ jobs:
               https://api.prismacloud.io/login | jq -r .token)
           
           for changed_file in ${{ steps.files_modified.outputs.added }}; do
-            data=${changed_file}
+            data=$(cat ${changed_file})
             echo "Policy: $data"            
             id=$(curl --request POST \
                   --url https://api.prismacloud.io/policy \
