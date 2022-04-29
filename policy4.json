@@ -1,6 +1,6 @@
 {
     "cloudType": "aws",
-    "name": "demo 4",
+    "name": "demo 9",
     "policySubTypes": [
         "build"
     ],
