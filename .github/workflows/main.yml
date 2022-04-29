@@ -38,10 +38,9 @@ jobs:
               -d '{"username":"${{ secrets.PCS_USER }}", "password":"${{ secrets.PCS_PASS }}"}' \
               https://api.prismacloud.io/login | jq -r .token)
           
-          echo "Policy: ${changed_file}"
-          
           for changed_file in ${{ steps.files_modified.outputs.added }}; do
             data=${changed_file}
+            echo "Policy: $data"            
             id=$(curl --request POST \
                   --url https://api.prismacloud.io/policy \
                   --header 'Content-Type: application/json' \
