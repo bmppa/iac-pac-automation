@@ -15,6 +15,11 @@ on:
 jobs:
   policy_update:
     runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        shell: bash
+          
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Repo
