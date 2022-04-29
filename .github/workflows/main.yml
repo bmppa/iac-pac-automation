@@ -30,6 +30,7 @@ jobs:
         uses: jitterbit/get-changed-files@v1
 
       - name: Get Prisma Cloud Token
+        id: prisma
         run: |
           AUTH_TOKEN=$(curl -skH "Content-Type: application/json" \
               -d '{"username":"${{ secrets.PCS_USER }}", "password":"${{ secrets.PCS_PASS }}"}' \
@@ -46,7 +47,7 @@ jobs:
             id=$(curl --request POST \
                   --url https://api.prismacloud.io/policy \
                   --header 'Content-Type: application/json' \
-                  --header "Authorization: Bearer $token" \
+                  --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}" \
                   --data "$data" | jq -r .policyId)
             git mv ${changed_file} "$id.json"
             git config user.email "demo@panw.com"
