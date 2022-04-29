@@ -28,23 +28,25 @@ jobs:
       - name: Get Modified Files
         id: files_modified
         uses: jitterbit/get-changed-files@v1
+
+      - name: Get Prisma Cloud Token
+        run: |
+          AUTH_TOKEN=$(curl -skH "Content-Type: application/json" \
+              -d '{"username":"${{ secrets.PCS_USER }}", "password":"${{ secrets.PCS_PASS }}"}' \
+              https://api.prismacloud.io/login | jq -r .token)
+          echo "::set-output name=token::$AUTH_TOKEN"
       
       # Create policy
       - name: Create Policy
         if: ${{ steps.files_modified.outputs.added }}
         run: |
-        
-          AUTH_TOKEN=$(curl -skH "Content-Type: application/json" \
-              -d '{"username":"${{ secrets.PCS_USER }}", "password":"${{ secrets.PCS_PASS }}"}' \
-              https://api.prismacloud.io/login | jq -r .token)
-          
           for changed_file in ${{ steps.files_modified.outputs.added }}; do
             data=$(cat ${changed_file})
             echo "Policy: $data"            
             id=$(curl --request POST \
                   --url https://api.prismacloud.io/policy \
                   --header 'Content-Type: application/json' \
-                  --header "Authorization: Bearer $AUTH_TOKEN" \
+                  --header "Authorization: Bearer $token" \
                   --data "$data" | jq -r .policyId)
             git mv ${changed_file} "$id.json"
             git config user.email "demo@panw.com"
