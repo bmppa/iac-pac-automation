@@ -99,20 +99,20 @@ jobs:
         run: |
           for changed_file in ${{ steps.files_modified.outputs.removed }}; do
             all_policies=$(curl --request GET \
-                           --url https://www.bridgecrew.cloud/api/v1/policies/table/data \
+                           --url https://api.prismacloud.io/policy \
                            --header 'Accept: application/json' \
-                           --header "authorization: ${{ secrets.BC_API_KEY }}")
-            total_policies=$(echo $all_policies | jq '.data | length')
+                           --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}")
+            total_policies=$(echo $all_policies | jq '. | length')
             deleted_policy=$(echo ${changed_file} | cut -d '.' -f 1)
             
             for ((t = 0 ; t < $total_policies ; t++)); do
-                policy=$(echo $all_policies | jq -r .data[$t].id)
+                policy=$(echo $all_policies | jq -r .[$t].policyId)
                 if [[ "$deleted_policy" == "$policy" ]];
                     then
                         curl --request DELETE \
-                            --url https://www.bridgecrew.cloud/api/v1/policies/$policy \
+                            --url https://api.prismacloud.io/policy/$policy \
                             --header 'Accept: application/json' \
-                            --header "authorization: ${{ secrets.BC_API_KEY }}"
+                            --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}"
                             break
                 fi
             done
