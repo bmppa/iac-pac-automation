@@ -97,28 +97,10 @@ jobs:
       - name: Delete Policy
         if: ${{ steps.files_modified.outputs.removed }}
         run: |
-          echo "removed: ${{ steps.files_modified.outputs.removed }}"
           for changed_file in ${{ steps.files_modified.outputs.removed }}; do
-            all_policies=$(curl --request GET \
-                           --url https://api.prismacloud.io/policy \
-                           --header 'Accept: application/json' \
-                           --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}")
-            echo "Checkpoint: 1"
-            total_policies=$(echo $all_policies | jq '. | length')
-            echo "Checkpoint: 2"
-            echo "Total Policies: $total_policies"
             deleted_policy=$(echo ${changed_file} | cut -d '.' -f 1)
-            echo "Deleted policy id: $deleted_policy"
-            
-            for ((t = 0 ; t < $total_policies ; t++)); do
-                policy=$(echo $all_policies | jq -r .[$t].policyId)
-                if [[ "$deleted_policy" == "$policy" ]];
-                    then
-                        curl --request DELETE \
-                            --url https://api.prismacloud.io/policy/$policy \
-                            --header 'Accept: application/json' \
-                            --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}"
-                            break
-                fi
-            done
+            curl --request DELETE \
+                --url https://api.prismacloud.io/policy/$deleted_policy \
+                --header 'Accept: application/json' \
+                --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}"
           done
