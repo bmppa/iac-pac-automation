@@ -103,11 +103,9 @@ jobs:
                            --url https://api.prismacloud.io/policy \
                            --header 'Accept: application/json' \
                            --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}")
-            sleep 10
             echo "Checkpoint: 1"
             total_policies=$(echo $all_policies | jq '. | length')
             echo "Checkpoint: 2"
-            sleep 10         
             echo "Total Policies: $total_policies"
             deleted_policy=$(echo ${changed_file} | cut -d '.' -f 1)
             echo "Deleted policy id: $deleted_policy"
