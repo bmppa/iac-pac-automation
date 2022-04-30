@@ -99,12 +99,14 @@ jobs:
         run: |
           echo "removed: ${{ steps.files_modified.outputs.removed }}"
           for changed_file in ${{ steps.files_modified.outputs.removed }}; do
-            #all_policies=$(curl --request GET \
-            #               --url https://api.prismacloud.io/policy \
-            #               --header 'Accept: application/json' \
-            #               --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}")
-            #total_policies=$(echo $all_policies | jq '. | length')
-            #echo "Total Policies: #total_policies"
+            all_policies=$(curl --request GET \
+                           --url https://api.prismacloud.io/policy \
+                           --header 'Accept: application/json' \
+                           --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}")
+            sleep 10
+            total_policies=$(echo $all_policies | jq '. | length')
+            sleep 10
+            echo "Total Policies: #total_policies"
             deleted_policy=$(echo ${changed_file} | cut -d '.' -f 1)
             echo "Deleted policy id: $deleted_policy"
             
