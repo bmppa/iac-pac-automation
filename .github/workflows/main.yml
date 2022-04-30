@@ -104,6 +104,7 @@ jobs:
                            --header 'Accept: application/json' \
                            --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}")
             sleep 10
+            echo "I am HERE"
             total_policies=$(echo $all_policies | jq '. | length')
             sleep 10
             echo "Total Policies: #total_policies"
