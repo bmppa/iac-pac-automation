@@ -21,10 +21,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Repo
         uses: actions/checkout@v2
-     
-      # Install jq and yq
-      - name: Install jq and yq
-        run: sudo snap install jq yq
 
       # Get modified files (https://github.com/marketplace/actions/get-all-changed-files)
       - name: Get Modified Files
