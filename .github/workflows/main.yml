@@ -39,12 +39,6 @@ jobs:
       - name: Create Policy
         if: ${{ steps.files_modified.outputs.added }}
         run: |
-          
-          token=$(curl --request POST \
-            --url https://api.prismacloud.io/login \
-            --header 'Content-Type: application/json' \
-            --data '{"username": "${{ secrets.pcs_user }}", "password": "${{ secrets.pcs_pass }}"}' | jq -r .token)
-          
           for changed_file in ${{ steps.files_modified.outputs.added }}; do
             data=$(cat ${changed_file})         
             id=$(curl --request POST \
