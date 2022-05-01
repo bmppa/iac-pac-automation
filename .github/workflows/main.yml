@@ -1,4 +1,4 @@
-name: Update Bridgecrew Policies
+name: Update Prisma Cloud Code Security Policies
 
 # Controls when the workflow will run
 on:
