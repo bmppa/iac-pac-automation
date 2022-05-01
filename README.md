@@ -1,4 +1,4 @@
-# Policy-as-Code Automation with Bridgecrew and GitHub Actions
+# Policy-as-Code Automation with Prisma Cloud Code Security and GitHub Actions
 
 This GitHub Action runs whenever files change in the main branch. It automatically creates, updates or deletes a Bridgecrew custom policy or policies from your Bridgecrew console based on the file changes triggered by the main branch.
 
