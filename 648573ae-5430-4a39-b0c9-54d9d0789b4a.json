@@ -1,9 +1,9 @@
 {
 	"cloudType": "gcp",
 	"complianceMetadata": [],
-	"description": "BA - Custom GCP Policy",
+	"description": "Custom GCP Policy",
 	"labels": [],
-	"name": "Custom GCP Policy",
+	"name": "BA - Custom GCP Policy",
 	"policySubTypes": ["build"],
 	"policyType": "config",
 	"recommendation": "",
