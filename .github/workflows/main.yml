@@ -12,6 +12,8 @@ on:
 jobs:
   policy_update:
     runs-on: ubuntu-latest
+    env:
+      console_address: https://api.prismacloud.io
     
     defaults:
       run:
@@ -32,7 +34,7 @@ jobs:
         run: |
           AUTH_TOKEN=$(curl -skH "Content-Type: application/json" \
               -d '{"username":"${{ secrets.PCS_USER }}", "password":"${{ secrets.PCS_PASS }}"}' \
-              https://api.prismacloud.io/login | jq -r .token)
+              $console_address/login | jq -r .token)
           echo "::set-output name=token::$AUTH_TOKEN"
       
       # Create policy
@@ -42,7 +44,7 @@ jobs:
           for changed_file in ${{ steps.files_modified.outputs.added }}; do
             data=$(cat ${changed_file})         
             id=$(curl --request POST \
-                  --url https://api.prismacloud.io/policy \
+                  --url $console_address/policy \
                   --header 'Content-Type: application/json' \
                   --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}" \
                   --data "$data" | jq -r .policyId)
@@ -61,7 +63,7 @@ jobs:
             policy=$(echo ${changed_file} | cut -d '.' -f 1)
             data=$(cat ${changed_file})
             curl --request PUT \
-                --url https://api.prismacloud.io/policy/$policy \
+                --url $console_address/policy/$policy \
                 --header 'Accept: application/json' \
                 --header 'Content-Type: application/json' \
                 --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}" \
@@ -75,7 +77,7 @@ jobs:
           for changed_file in ${{ steps.files_modified.outputs.removed }}; do
             deleted_policy=$(echo ${changed_file} | cut -d '.' -f 1)
             curl --request DELETE \
-                --url https://api.prismacloud.io/policy/$deleted_policy \
+                --url $console_address/policy/$deleted_policy \
                 --header 'Accept: application/json' \
                 --header "Authorization: Bearer ${{ steps.prisma.outputs.token }}"
           done
