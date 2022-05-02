@@ -6,7 +6,7 @@ on:
   push:
     branches: [ pccs-demo ]
     paths-ignore:
-    - '.github/workflows/main.'
+    - '.github/workflows/main.yml'
     - '**/README.md'
 
 jobs:
