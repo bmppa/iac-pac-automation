@@ -11,6 +11,7 @@ This workflow is not ment for production use. Its goal is to provide a way to sh
 
 ## Requirements
 
+* GitHub account
 * Prisma Cloud account
 * Prisma Cloud Access Key
 
