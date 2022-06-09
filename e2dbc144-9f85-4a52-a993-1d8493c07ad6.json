@@ -14,7 +14,7 @@
 			"type": "build",
 			"recommendation": ""
 		}],
-		"name": "Custom GCP Policy",
+		"name": "BA - Custom Demo GCP Policy",
 		"parameters": {
 			"savedSearch": "false",
 			"withIac": "true"
